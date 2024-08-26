@@ -68,8 +68,8 @@ ax.set_xlabel('Number of Fragments')
 plt.legend()
 
 plt.title('Area Histogram, P80: ' + str(round(df_masks['area'].quantile(0.8),1)) + f'{units}^2')
-# st.pyplot(fig)
-st.bar_chart(data=fig)
+st.pyplot(fig)
+# st.bar_chart(data=fig)
 
 fig, ax = plt.subplots()
 df_masks['diameter'].hist(bins=100,ax=ax)
