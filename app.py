@@ -32,7 +32,8 @@ with col_units:
     units = st.selectbox('Units: ', options=['cm', 'in'], index=0)
 
 original_image, resized_image = load_image(image_selected)
-st.image(original_image, caption='Original Image')
+# st.image(image, caption=None, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+st.image(original_image, caption='Original Image', width=5,  use_column_width=2, clamp=False, channels="RGB", output_format="auto")
 
 area_ball = math.pi*diameter*diameter/4.0
 
