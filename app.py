@@ -96,31 +96,69 @@ with exp2:
     st.write('Masks Stadistics')
     st.write(df_masks.describe())
 
+p80 = df_masks['area'].quantile(0.8)
 # graph1 
 grp1, grp2 = st.columns(2)
 with grp1:
-    fig, ax = plt.subplots()
-    df_masks['area'].hist(bins=100,ax=ax)
-# x=df_masks['area'].quantile(0.8)
-    ax.axvline(x=df_masks['area'].quantile(0.8), c='r', label='P80')
-    ax.set_ylabel(f'Area {units}^2')
-    ax.set_xlabel('Number of Fragments')
-    plt.legend()
-# 
+#     fig, ax = plt.subplots()
+#     df_masks['area'].hist(bins=100,ax=ax)
+# # x=df_masks['area'].quantile(0.8)
+#     ax.axvline(x=df_masks['area'].quantile(0.8), c='r', label='P80')
+#     ax.set_ylabel(f'Area {units}^2')
+#     ax.set_xlabel('Number of Fragments')
+#     plt.legend()
 
-
-
-# gaph2 
-    plt.title('Area Histogram, P80: ' + str(round(df_masks['area'].quantile(0.8),1)) + f'{units}^2')
-    st.pyplot(fig)
+# # gaph2 
+#     plt.title('Area Histogram, P80: ' + str(round(df_masks['area'].quantile(0.8),1)) + f'{units}^2')
+#     st.pyplot(fig)
 # st.bar_chart(data=x, *, x=None, y=None, x_label='Number of Fragments', y_label=f'Area {units}^2')
-with grp2:
-    fig, ax = plt.subplots()
-    df_masks['diameter'].hist(bins=100,ax=ax)
-    ax.axvline(x=df_masks['diameter'].quantile(0.8), c='r', label='P80')
-    ax.set_ylabel(f'Diameter {units}')
-    ax.set_xlabel('Number of Fragments')
-    plt.legend()
+    
 
-    plt.title('Diameter Histogram, P80: ' + str(round(df_masks['diameter'].quantile(0.8),1)) + f'{units}')
-    st.pyplot(fig)
+# Create a histogram chart using Altair
+    chart = alt.Chart(df_masks).mark_bar().encode(
+        alt.X('area:Q', bin=alt.Bin(maxbins=100), title=f'Area {units}^2'),
+        alt.Y('count()', title='Number of Fragments')
+      ).properties(
+          title=f'Area Histogram, P80: {round(p80, 1)} {units}^2'
+      ).interactive()
+
+# Add P80 line
+    p80_line = alt.Chart(pd.DataFrame({'P80': [p80]})).mark_rule(color='red').encode(
+    x='P80:Q'
+    )
+
+# Combine the histogram and P80 line
+    final_chart = chart + p80_line
+
+# Display the chart using Streamlit
+    st.altair_chart(final_chart, use_container_width=True) 
+
+with grp2:
+    # fig, ax = plt.subplots()
+    # df_masks['diameter'].hist(bins=100,ax=ax)
+    # ax.axvline(x=df_masks['diameter'].quantile(0.8), c='r', label='P80')
+    # ax.set_ylabel(f'Diameter {units}')
+    # ax.set_xlabel('Number of Fragments')
+    # plt.legend()
+
+    # plt.title('Diameter Histogram, P80: ' + str(round(df_masks['diameter'].quantile(0.8),1)) + f'{units}')
+    # st.pyplot(fig)
+    units = str(units)
+    # p80 = df_masks['area'].quantile(0.8)
+    diameter_chart = alt.Chart(df_masks).mark_bar().encode(
+    alt.X('diameter:Q', bin=alt.Bin(maxbins=100), title=f'Diameter {units}'),
+    alt.Y('count()', title='Number of Fragments')
+    ).properties(
+      title=f'Diameter Histogram, P80: {round(diameter, 1)} {units}'
+    ).interactive()
+
+# Add P80 line
+    p80_diameter_line = alt.Chart(pd.DataFrame({'P80': [diameter]})).mark_rule(color='red').encode(
+        x='P80:Q'
+    )
+
+# Combine the histogram and P80 line
+    final_diameter_chart = diameter_chart + p80_diameter_line
+
+# Display the chart using Streamlit
+    st.altair_chart(final_diameter_chart, use_container_width=True)
