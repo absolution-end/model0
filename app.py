@@ -6,6 +6,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import altair as alt
 
 st.set_page_config(layout="wide")
 
